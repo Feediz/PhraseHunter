@@ -12,7 +12,7 @@ class Phrase {
    */
   addPhraseToDisplay() {
     const phrase = this.phrase;
-    // alert(phrase);
+
     // let htmlPhrase = '<div id="phrase" class="section"><ul>';
     let htmlPhrase = "";
     for (let i = 0; i < phrase.length; i++) {
@@ -23,22 +23,42 @@ class Phrase {
           '<li class="hide letter ' + phrase[i] + '">' + phrase[i] + "</li>";
       }
     }
-    // phrase.forEach(letter => {
-    //   if (letter === " ") {
-    //     htmlPhrase += '<li class="space"> </li>';
-    //   } else {
-    //     htmlPhrase +=
-    //       '<li class="hide letter ' + letter + '">' + letter + "</li>";
-    //   }
-    // });
     //htmlPhrase += "</ul></div>";
-    $("#phrase").html(htmlPhrase);
+    $("#phrase ul").html(htmlPhrase);
     return htmlPhrase;
   }
 
   // checks to see if letter user selected matches letter in phrase
-  checkLetter() {}
+  checkLetter(clickedLetter) {
+    const phrase = this.phrase;
+
+    for (let i = 0; i < phrase.length; i++) {
+      // alert(`Clicked ${clickedLetter} ||| Phrase: ${phrase[i]}`);
+      if (phrase[i] === clickedLetter) {
+        // return true;
+        this.showMatchedLetter(clickedLetter);
+      } else {
+        // return false;
+      }
+    }
+  }
 
   // reveals letter(s) on the board that matches the selected letter.
-  showMatchedLetter() {}
+  showMatchedLetter(clickedLetter) {
+    //const phraseElement = document.querySelector("#phrase li");
+    const phraseElement = $("#phrase li");
+    phraseElement.each((index, li) => {
+      if ($(li).text() === clickedLetter) {
+        $(li).removeClass("hide");
+        $(li).addClass("show");
+      }
+    });
+    for (let i = 0; i < phraseElement.length; i++) {
+      if (phraseElement[i].textContent === clickedLetter) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
 }

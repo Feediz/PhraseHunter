@@ -15,10 +15,10 @@ class Game {
     overlay.hide();
 
     // call getRandomPhrase() and set activePhrase property with random phrase
-    this.activePhrase = this.getRandomPhrase().addPhraseToDisplay();
+    this.activePhrase = this.getRandomPhrase();
 
     // add phrase to the board by calling addPhraseToDisplay() on the active phrase object
-    // this.addPhraseToDisplay();
+    this.activePhrase.addPhraseToDisplay();
   }
 
   /**
@@ -32,8 +32,16 @@ class Game {
     return new Phrase(randomPhrase);
   }
 
-  handleInteraction() {
+  handleInteraction(clickedLetter) {
     // check to see button clicked by player matches a letter in phrase
+    const checkLetter = this.activePhrase.checkLetter(clickedLetter);
+
+    //alert(`Clicked ${checkLetter}`);
+    // if (checkLetter) {
+    //   this.activePhrase.showMatchedLetter(clickedLetter);
+    // } else {
+    //   //
+    // }
     // then direct game depending correct or incorrect guess.
   }
 
@@ -58,14 +66,6 @@ class Game {
    * @return {array} An array of phrases that could be used in the game
    */
   createPhrase() {
-    // return [
-    //   "A drop in the bucket",
-    //   "A foot in the door",
-    //   "All in all",
-    //   "As old as the hills",
-    //   "Bite the dust"
-    // ];
-
     return [
       { phrase: "A drop in the bucket" },
       { phrase: "A foot in the door" },
