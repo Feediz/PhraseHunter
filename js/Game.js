@@ -15,10 +15,10 @@ class Game {
     overlay.hide();
 
     // call getRandomPhrase() and set activePhrase property with random phrase
-    this.activePhrase = this.getRandomPhrase();
+    this.activePhrase = this.getRandomPhrase().addPhraseToDisplay();
 
     // add phrase to the board by calling addPhraseToDisplay() on the active phrase object
-    this.addPhraseToDisplay();
+    // this.addPhraseToDisplay();
   }
 
   /**
@@ -28,7 +28,8 @@ class Game {
   getRandomPhrase() {
     // retrieve random phrase and return it
     const randomIndex = Math.floor(Math.random() * this.phrases.length);
-    return this.phrases[randomIndex];
+    const randomPhrase = this.phrases[randomIndex];
+    return new Phrase(randomPhrase);
   }
 
   handleInteraction() {
