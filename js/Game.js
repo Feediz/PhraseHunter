@@ -5,13 +5,7 @@
 class Game {
   constructor() {
     this.missed = 0;
-    this.phrases = [
-      "A drop in the bucket",
-      "A foot in the door",
-      "All in all",
-      "As old as the hills",
-      "Bite the dust"
-    ];
+    this.phrases = this.createPhrase();
     this.activePhrase = null;
   }
 
@@ -27,6 +21,10 @@ class Game {
     this.addPhraseToDisplay();
   }
 
+  /**
+   * Selects random phrase from phrases property
+   * @return {Object} Phrase object chosen to be used
+   */
   getRandomPhrase() {
     // retrieve random phrase and return it
     const randomIndex = Math.floor(Math.random() * this.phrases.length);
@@ -52,5 +50,27 @@ class Game {
     // show original start screen overlay
     // update overlay h1 element with friendly win or loss message
     // replace the overlay start css class with either win or lose css class
+  }
+
+  /**
+   * Creates phrases for use in game
+   * @return {array} An array of phrases that could be used in the game
+   */
+  createPhrase() {
+    // return [
+    //   "A drop in the bucket",
+    //   "A foot in the door",
+    //   "All in all",
+    //   "As old as the hills",
+    //   "Bite the dust"
+    // ];
+
+    return [
+      { phrase: "A drop in the bucket" },
+      { phrase: "A foot in the door" },
+      { phrase: "All in all" },
+      { phrase: "As old as the hills" },
+      { phrase: "Bite the dust" }
+    ];
   }
 }
