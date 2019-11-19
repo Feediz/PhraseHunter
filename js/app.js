@@ -13,4 +13,8 @@ $("#qwerty button").on("click", e => {
   const clicked = e.target.textContent;
   //alert(`Clicked ${clicked}`);
   game.handleInteraction(clicked);
+
+  game.removeLife();
 });
+
+

@@ -45,18 +45,69 @@ class Game {
     // then direct game depending correct or incorrect guess.
   }
 
+  /**
+  * Increases the value of the missed property
+  * Removes a life from the scoreboard
+  * Checks if player has remaining lives and ends game if player is out
+  */
   removeLife() {
+    this.missed += 1;
+
+    let scoreboardChanged = false;
+    
+    const scoreBoardElement = $('#scoreboard li');
+    scoreBoardElement.each( (i, li) => {
+      // reference scoreboard image element
+      let img = li.firstElementChild;
+      let currentImgName = img.src.substring(img.src.lastIndexOf("/")+1, img.src.length);
+
+      if(currentImgName === 'liveHeart.png' && scoreboardChanged === false) {
+        img.src = 'images/lostHeart.png';
+        scoreboardChanged = true;
+      }
+    });
+    if(scoreboardChanged === false) {
+      this.gameOver('lost');
+    }
     // remove a life from the scoreboard (replace liveHeart.png with a lostHeart.png)
     // increment missed property
     // if out of guesses then call gameOver()
-  }
+  };
 
+  /**
+  * Checks for winning move
+  * @return {boolean} True if game has been won, false if game wasn't won
+  */
   checkForWin() {
-    // check to see if player has revealed all of the letters in active phrase
-  }
+    let won = true;    
+    const phraseElement = $("#phrase li");
+    phraseElement.each((index, li) => {
+      if($(li).hasClass('hide')){
+        won = false;
+      }
+    });
+    return won;
+  };
 
-  gameOver() {
+  /**
+  * Displays game over message
+  * @param {boolean} gameWon - Whether or not the user won the game
+  */
+  gameOver(gameWon) {
     // show original start screen overlay
+    const overlay = $("#overlay");
+    const overlay_msg = $("#game-over-message");
+
+    if(gameWon === 'won') {
+      // game won
+      overlay.addClass('win');
+      overlay_msg.text("Congrats! You won!!!");
+    } else {
+      // game lost
+      overlay.addClass('lose');
+      overlay_msg.text("Bummer - No worries try again.");
+    }
+    overlay.show();
     // update overlay h1 element with friendly win or loss message
     // replace the overlay start css class with either win or lose css class
   }

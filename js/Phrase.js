@@ -37,8 +37,9 @@ class Phrase {
       if (phrase[i] === clickedLetter) {
         // return true;
         this.showMatchedLetter(clickedLetter);
+        return true;
       } else {
-        // return false;
+        return false;
       }
     }
   }
