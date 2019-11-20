@@ -10,11 +10,22 @@ $("#btn__reset").click(() => {
 });
 
 $("#qwerty button").on("click", e => {
-  const clicked = e.target.textContent;
+  const buttonClicked = e.target;
+  
   //alert(`Clicked ${clicked}`);
-  game.handleInteraction(clicked);
-
-  game.removeLife();
+  game.handleInteraction(buttonClicked);
 });
 
 
+
+  $(document).keypress((e) => {
+    if($("#overlay").is(":hidden")) {
+        //console.log(e.which);
+        // console.log('keypress', String.fromCharCode( e.which ));
+        let keyPressed = String.fromCharCode( e.which );
+        const regExLetters = /^[a-zA-Z]+$/;
+        if(regExLetters.test(keyPressed)) {
+          game.handleInteraction(keyPressed);
+        }
+      }
+  });

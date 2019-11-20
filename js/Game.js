@@ -32,16 +32,38 @@ class Game {
     return new Phrase(randomPhrase);
   }
 
-  handleInteraction(clickedLetter) {
+  /**
+  * Handles onscreen keyboard button clicks
+  * @param (HTMLButtonElement) button - The clicked button element
+  */
+  handleInteraction(clickedElement) {
     // check to see button clicked by player matches a letter in phrase
-    const checkLetter = this.activePhrase.checkLetter(clickedLetter);
-
+    const checkLetter = this.activePhrase.checkLetter(clickedElement.textContent);
+    
+    // disable element
+    clickedElement.disabled = true;
+    
+    
+    //console.log(clickedElement);
     //alert(`Clicked ${checkLetter}`);
-    // if (checkLetter) {
-    //   this.activePhrase.showMatchedLetter(clickedLetter);
-    // } else {
-    //   //
-    // }
+    if (checkLetter) {
+      // append chosen css if guessed letter is correct
+      clickedElement.classList.add("chosen");
+
+      // show guessed letter
+      this.activePhrase.showMatchedLetter(clickedElement.textContent);
+
+      // check if player won game
+      if(this.checkForWin()) {
+        this.gameOver("won");
+      }
+
+    } else {
+      //
+      clickedElement.classList.add("wrong");
+      this.removeLife();
+
+    }
     // then direct game depending correct or incorrect guess.
   }
 
@@ -107,9 +129,32 @@ class Game {
       overlay.addClass('lose');
       overlay_msg.text("Bummer - No worries try again.");
     }
+    // reset game
+    this.resetGame();
     overlay.show();
     // update overlay h1 element with friendly win or loss message
     // replace the overlay start css class with either win or lose css class
+  }
+
+
+  resetGame() {
+    // remove phrase
+    $("#phrase ul").empty();
+
+    // reset the onscreen keyboard css
+    const qwertyKey = $("#qwerty button");
+    qwertyKey.each((i, e) => {
+      e.classList.remove("chosen");
+      e.classList.remove("wrong");
+      e.classList.add("css");
+    });
+
+    // change the scoreboard images
+    const scoreBoardElement = $('#scoreboard li');
+    scoreBoardElement.each( (i, li) => {
+      let img = li.firstElementChild;
+      img.src = 'images/liveHeart.png';
+    });
   }
 
   /**

@@ -36,10 +36,10 @@ class Phrase {
       // alert(`Clicked ${clickedLetter} ||| Phrase: ${phrase[i]}`);
       if (phrase[i] === clickedLetter) {
         // return true;
-        this.showMatchedLetter(clickedLetter);
+        //this.showMatchedLetter(clickedLetter);
         return true;
       } else {
-        return false;
+        //return false;
       }
     }
   }
