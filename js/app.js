@@ -13,7 +13,7 @@ $("#qwerty button").on("click", e => {
   const buttonClicked = e.target;
   
   //alert(`Clicked ${clicked}`);
-  game.handleInteraction(buttonClicked);
+  game.handleInteraction(buttonClicked, 'virtual');
 });
 
 
@@ -25,7 +25,7 @@ $("#qwerty button").on("click", e => {
         let keyPressed = String.fromCharCode( e.which );
         const regExLetters = /^[a-zA-Z]+$/;
         if(regExLetters.test(keyPressed)) {
-          game.handleInteraction(keyPressed);
+          game.handleInteraction(keyPressed, "key");
         }
       }
   });
