@@ -9,15 +9,18 @@ class Game {
     this.activePhrase = null;
   }
 
+  /**
+   * start the game
+   */
   startGame() {
     // hide start screen #overlay
     const overlay = $("#overlay");
     overlay.hide();
 
-    // call getRandomPhrase() and set activePhrase property with random phrase
+    // get/set random phrase
     this.activePhrase = this.getRandomPhrase();
 
-    // add phrase to the board by calling addPhraseToDisplay() on the active phrase object
+    // add the phrase to the board
     this.activePhrase.addPhraseToDisplay();
   }
 
@@ -26,123 +29,141 @@ class Game {
    * @return {Object} Phrase object chosen to be used
    */
   getRandomPhrase() {
-    // retrieve random phrase and return it
+    // let's pick a random index
     const randomIndex = Math.floor(Math.random() * this.phrases.length);
+
+    // let's pick a prhase using the random index 
     const randomPhrase = this.phrases[randomIndex];
+
+    // let's return the phrase
     return new Phrase(randomPhrase);
   }
 
   /**
   * Handles onscreen keyboard button clicks
-  * @param (HTMLButtonElement) button - The clicked button element
+  * @param (HTMLButtonElement or string) clickedElement - The clicked button element or letter pressed
+  * @param (string) method - method of user interaction keyboard or virtual 
   */
   handleInteraction(clickedElement, method) {
+
+    // define checkLetter to be used 
+    // to hold if the letter guessed is correct or not
     let checkLetter;
-    if(method === "virtual") {
-        // check to see button clicked by player matches a letter in phrase
+    if(method === "virtual") {   // virtual keyboard used
+
+        // check to see if guessed correct letter
         checkLetter = this.activePhrase.checkLetter(clickedElement.textContent);
         
-        // disable element
+        // disable the letter button clicked
         clickedElement.disabled = true;
-        
-        
-        //console.log(clickedElement);
-        //alert(`Clicked ${checkLetter}`);
-        if (checkLetter) {
-          // append chosen css if guessed letter is correct
+       
+
+        if (checkLetter) {   // guessed correct letter
+          // add css class "chosen"
           clickedElement.classList.add("chosen");
 
-          // show guessed letter
+          // show guessed letter on the UI
           this.activePhrase.showMatchedLetter(clickedElement.textContent);
 
-          // check if player won game
+          // check if player won the game
           if(this.checkForWin()) {
+            // end the game
             this.gameOver("won");
           }
 
         } else {
-          //
+          // add css class "wrong"
           clickedElement.classList.add("wrong");
+
+          // remove a life
           this.removeLife();
 
         }
-        // then direct game depending correct or incorrect guess.
-    } else {
-      // keyboard
+    } else {   // physical keyboard used
+      
+      // virtualButton will hold the virtual button that holds the letter that was guessed
+      let virtualButton;
+
       // reference all qwerty buttons
       const $qwertyButtons = $("#qwerty button");
-      checkLetter = this.activePhrase.checkLetter(clickedElement);
-      if(checkLetter) {
-        // append chosen css class to virtual keyboard
-        $qwertyButtons.each( (i, el) => {
-          if(clickedElement === el.textContent){
-            el.classList.add("chosen");
-          }
-          // adding css class "chosen"
-          //$(this).addClass("chosen");
 
-          // show guessed letter on the UI
+      // iterate through the virtual buttons to compare with the letter guessed
+      $qwertyButtons.each( (i, el) => {
+
+        // let's find the button that holds the letter guessed
+        if(clickedElement === el.textContent) {
+          virtualButton = el;
+        }
+      });
+
+      // disable button 
+      if(virtualButton.disabled === false) {
+
+        // check to see if guessed correct letter
+        checkLetter = this.activePhrase.checkLetter(clickedElement);
+        if(checkLetter) {
+          // add css class "chosen"
+          virtualButton.classList.add("chosen");
+  
+          // show guessed letter
           this.activePhrase.showMatchedLetter(clickedElement);
-
+  
+          // check if player won game
           if(this.checkForWin()) {
             this.gameOver("won");
           }
-        });
-      } else {
-        alert($(this).hasClass("wrong"));
-        // append chosen css class to virtual keyboard
-        $qwertyButtons.each( (i, el) => {
-          if(clickedElement === el.textContent){
-            el.classList.add("wrong");
-          }
-          if($(this).hasClass("wrong")) {
-
-          } else {
-            // game lost
-            //$(this).addClass("wrong");
-            this.removeLife();
-          }
-          
-        });
-
-
-        
+        } else {
+          // add css class "wrong"
+          virtualButton.classList.add("wrong");
+  
+          // remove a life for wrong guesses
+          this.removeLife();
+        }
       }
 
+      // disable virtual key
+      virtualButton.disabled = true;
     }
   }
 
   /**
   * Increases the value of the missed property
-  * Removes a life from the scoreboard
+  * Remove a life from the scoreboard
   * Checks if player has remaining lives and ends game if player is out
   */
   removeLife() {
+    // increment missed count
     this.missed += 1;
 
+    // remove a life if there are still lifes left
     if(this.missed !== 5) {
+
+      // flag to track if lifes left image has already been changed
       let scoreboardChanged = false;
       
+      // let's reference the li elements holding number of lifes left
       const scoreBoardElement = $('#scoreboard li');
+
+      // iterate over the lifes li elements
       scoreBoardElement.each( (i, li) => {
         // reference scoreboard image element
         let img = li.firstElementChild;
+
+        // get current image name
         let currentImgName = img.src.substring(img.src.lastIndexOf("/")+1, img.src.length);
 
+        // change image source to lost image if current image name is liveHeart.png and we haven't updated 
+        // the image yet in this iteration
         if(currentImgName === 'liveHeart.png' && scoreboardChanged === false) {
           img.src = 'images/lostHeart.png';
           scoreboardChanged = true;
         }
       });
-      if(scoreboardChanged === false) {
-        this.gameOver('lost');
-      }
+
     } else {
+      // missed five times already, we end the game
       this.gameOver('lost');
     }
-      // remove a life from the scoreboard (replace liveHeart.png with a lostHeart.png)
-      // increment missed property
-      // if out of guesses then call gameOver()
   }
 
   /**
@@ -150,13 +171,22 @@ class Game {
   * @return {boolean} True if game has been won, false if game wasn't won
   */
   checkForWin() {
-    let won = true;    
+    // init a flag to track if game is won and set it to true
+    let won = true;
+
+    // reference the phrase li elements
     const phraseElement = $("#phrase li");
+
+    // iterate over the phrase elements
     phraseElement.each((index, li) => {
+
+      // set the won flag to false if any of the phrase element has un-revealed letters
       if($(li).hasClass('hide')){
         won = false;
       }
     });
+
+    // return won
     return won;
   };
 
@@ -165,27 +195,41 @@ class Game {
   * @param {boolean} gameWon - Whether or not the user won the game
   */
   gameOver(gameWon) {
-    // show original start screen overlay
+    // reference the overlay div
     const overlay = $("#overlay");
+
+    // reference the game-over-message div
     const overlay_msg = $("#game-over-message");
 
     if(gameWon === 'won') {
       // game won
+
+      // add css class "win"
       overlay.addClass('win');
+
+      // show user message they won
       overlay_msg.text("Congrats! You won!!!");
     } else {
       // game lost
+
+      // add css class "lose"
       overlay.addClass('lose');
+
+      // show user message they lost
       overlay_msg.text("Bummer - No worries try again.");
     }
+
     // reset game
     this.resetGame();
+    
+    // hide the game board
     overlay.show();
-    // update overlay h1 element with friendly win or loss message
-    // replace the overlay start css class with either win or lose css class
   }
 
 
+  /**
+  * resets the game board
+  */
   resetGame() {
     // remove phrase
     $("#phrase ul").empty();
