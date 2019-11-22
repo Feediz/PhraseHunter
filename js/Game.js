@@ -208,7 +208,7 @@ class Game {
       overlay.addClass('win');
 
       // show user message they won
-      overlay_msg.text("Congrats! You won!!!");
+      overlay_msg.text("Congrats! You won!!! (Press n to start another game)");
     } else {
       // game lost
 
@@ -216,11 +216,8 @@ class Game {
       overlay.addClass('lose');
 
       // show user message they lost
-      overlay_msg.text("Bummer - No worries try again.");
+      overlay_msg.text("Bummer - No worries try again. (Press n to start another game)");
     }
-
-    // reset game
-    this.resetGame();
     
     // hide the game board
     overlay.show();
@@ -231,7 +228,7 @@ class Game {
   * resets the game board
   */
   resetGame() {
-    // remove phrase
+    // remove phrase from gameboard
     $("#phrase ul").empty();
 
     // reset the onscreen keyboard css
