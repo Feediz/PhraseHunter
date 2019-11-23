@@ -22,6 +22,10 @@ class Game {
 
     // add the phrase to the board
     this.activePhrase.addPhraseToDisplay();
+
+    // remove the overlay won/lose css
+    overlay.slideUp("slow").removeClass('win');
+    overlay.slideUp("slow").removeClass('lose');
   }
 
   /**
@@ -205,19 +209,26 @@ class Game {
       // game won
 
       // add css class "win"
-      overlay.addClass('win');
+      overlay.addClass('win').slideDown("slow");
 
       // show user message they won
       overlay_msg.text("Congrats! You won!!! (Press n to start another game)");
+
+      // reset the game
+      this.resetGame();
     } else {
       // game lost
 
       // add css class "lose"
-      overlay.addClass('lose');
+      overlay.addClass('lose').slideDown("slow");
 
       // show user message they lost
       overlay_msg.text("Bummer - No worries try again. (Press n to start another game)");
+
+      // reset the game
+      this.resetGame();
     }
+    
     
     // hide the game board
     overlay.show();

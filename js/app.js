@@ -12,9 +12,6 @@ $("#btn__reset").click(() => {
   
   // init the game object
   game = new Game();
-  
-  // reset game
-  game.resetGame();
 
   // let's start the game
   game.startGame();
